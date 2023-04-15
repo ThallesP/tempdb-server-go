@@ -8,8 +8,8 @@ import (
 )
 
 type EnvVars struct {
-	MONGODB_URI  string `mapstructure:"MONGODB_URI"`
-	MONGODB_NAME string `mapstructure:"MONGODB_NAME"`
+	DATABASE_URI  string `mapstructure:"DATABASE_URI"`
+	DATABASE_HOST string `mapstructure:"DATABASE_HOST"`
 	PORT         string `mapstructure:"PORT"`
 }
 
@@ -17,8 +17,8 @@ func LoadConfig() (config EnvVars, err error) {
 	env := os.Getenv("GO_ENV")
 	if env == "production" {
 		return EnvVars{
-			MONGODB_URI:  os.Getenv("MONGODB_URI"),
-			MONGODB_NAME: os.Getenv("MONGODB_NAME"),
+			DATABASE_URI:  os.Getenv("DATABASE_URI"),
+			DATABASE_HOST: os.Getenv("DATABASE_HOST"),
 			PORT:         os.Getenv("PORT"),
 		}, nil
 	}
@@ -37,13 +37,13 @@ func LoadConfig() (config EnvVars, err error) {
 	err = viper.Unmarshal(&config)
 
 	// validate config here
-	if config.MONGODB_URI == "" {
-		err = errors.New("MONGODB_URI is required")
+	if config.DATABASE_URI == "" {
+		err = errors.New("DATABASE_URI is required")
 		return
 	}
 
-	if config.MONGODB_NAME == "" {
-		err = errors.New("MONGODB_NAME is required")
+	if config.DATABASE_HOST == "" {
+		err = errors.New("DATABASE_HOST is required")
 		return
 	}
 

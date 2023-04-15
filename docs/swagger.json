@@ -1,10 +1,10 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "An example template of a Golang backend API using Fiber and MongoDB",
-        "title": "Tapir App Template",
+        "description": "Create temporary databases for testing and development",
+        "title": "TempDB Server API",
         "contact": {
-            "name": "Ben Davis"
+            "name": "Thalles Passos"
         },
         "license": {
             "name": "MIT"
@@ -13,51 +13,27 @@
     },
     "basePath": "/",
     "paths": {
-        "/todos": {
-            "get": {
-                "description": "fetch every todo available.",
-                "consumes": [
-                    "*/*"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "todos"
-                ],
-                "summary": "Get all todos.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/todo.todoDB"
-                            }
-                        }
-                    }
-                }
-            },
+        "/databases": {
             "post": {
-                "description": "creates one todo.",
+                "description": "creates temporary dabase",
                 "consumes": [
-                    "*/*"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "todos"
+                    "databases"
                 ],
-                "summary": "Create one todo.",
+                "summary": "Create temporary database",
                 "parameters": [
                     {
-                        "description": "Todo to create",
-                        "name": "todo",
+                        "description": "Database details",
+                        "name": "database",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/todo.createTodoRequest"
+                            "$ref": "#/definitions/databases.createDatabaseInput"
                         }
                     }
                 ],
@@ -65,7 +41,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/todo.createTodoResponse"
+                            "$ref": "#/definitions/databases.createDatabaseResponse"
                         }
                     }
                 }
@@ -73,38 +49,36 @@
         }
     },
     "definitions": {
-        "todo.createTodoRequest": {
+        "databases.createDatabaseInput": {
             "type": "object",
             "properties": {
-                "description": {
+                "database_type": {
                     "type": "string"
                 },
-                "title": {
-                    "type": "string"
+                "expires_in_milliseconds": {
+                    "type": "integer"
                 }
             }
         },
-        "todo.createTodoResponse": {
+        "databases.createDatabaseResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                }
-            }
-        },
-        "todo.todoDB": {
-            "type": "object",
-            "properties": {
-                "completed": {
-                    "type": "boolean"
-                },
-                "description": {
+                "connection_string": {
                     "type": "string"
                 },
-                "id": {
+                "database_name": {
                     "type": "string"
                 },
-                "title": {
+                "expires_in": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "user": {
                     "type": "string"
                 }
             }

@@ -7,8 +7,8 @@ import (
 
 	"github.com/bmdavis419/tapir-app/config"
 	_ "github.com/bmdavis419/tapir-app/docs"
+	"github.com/bmdavis419/tapir-app/internal/databases"
 	"github.com/bmdavis419/tapir-app/internal/storage"
-	"github.com/bmdavis419/tapir-app/internal/todo"
 	"github.com/bmdavis419/tapir-app/pkg/shutdown"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -16,10 +16,10 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-// @title Tapir App Template
+// @title TempDB Server API
 // @version 2.0
-// @description An example template of a Golang backend API using Fiber and MongoDB
-// @contact.name Ben Davis
+// @description Create temporary databases for testing and development
+// @contact.name Thalles Passos
 // @license.name MIT
 // @BasePath /
 func main() {
@@ -72,7 +72,7 @@ func run(env config.EnvVars) (func(), error) {
 
 func buildServer(env config.EnvVars) (*fiber.App, func(), error) {
 	// init the storage
-	db, err := storage.BootstrapMongo(env.MONGODB_URI, env.MONGODB_NAME, 10*time.Second)
+	db, err := storage.BootstrapPostgres(env.DATABASE_URI, 10*time.Second)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -93,11 +93,11 @@ func buildServer(env config.EnvVars) (*fiber.App, func(), error) {
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// create the user domain
-	todoStore := todo.NewTodoStorage(db)
-	todoController := todo.NewTodoController(todoStore)
-	todo.AddTodoRoutes(app, todoController)
+	databaseStorage := databases.NewDatabasesStorage(db)
+	databaseController := databases.NewDatabasesController(databaseStorage, env.DATABASE_HOST)
+	databases.AddTodoRoutes(app, databaseController)
 
 	return app, func() {
-		storage.CloseMongo(db)
+		storage.ClosePostgres(db)
 	}, nil
 }

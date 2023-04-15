@@ -6,7 +6,7 @@ tasks:
       - air
   docs:
     cmds:
-      - swag init --dir ./cmd/http,./internal/todo
+      - swag init --dir ./cmd/http,./internal/databases
   build:
     cmds:
       - go build -o http-server cmd/http/main.go

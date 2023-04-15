@@ -1,73 +1,56 @@
 basePath: /
 definitions:
-  todo.createTodoRequest:
+  databases.createDatabaseInput:
     properties:
-      description:
+      database_type:
         type: string
-      title:
-        type: string
+      expires_in_milliseconds:
+        type: integer
     type: object
-  todo.createTodoResponse:
+  databases.createDatabaseResponse:
     properties:
-      id:
+      connection_string:
         type: string
-    type: object
-  todo.todoDB:
-    properties:
-      completed:
-        type: boolean
-      description:
+      database_name:
         type: string
-      id:
+      expires_in:
         type: string
-      title:
+      host:
+        type: string
+      password:
+        type: string
+      user:
         type: string
     type: object
 info:
   contact:
-    name: Ben Davis
-  description: An example template of a Golang backend API using Fiber and MongoDB
+    name: Thalles Passos
+  description: Create temporary databases for testing and development
   license:
     name: MIT
-  title: Tapir App Template
+  title: TempDB Server API
   version: "2.0"
 paths:
-  /todos:
-    get:
-      consumes:
-      - '*/*'
-      description: fetch every todo available.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/todo.todoDB'
-            type: array
-      summary: Get all todos.
-      tags:
-      - todos
+  /databases:
     post:
       consumes:
-      - '*/*'
-      description: creates one todo.
+      - application/json
+      description: creates temporary dabase
       parameters:
-      - description: Todo to create
+      - description: Database details
         in: body
-        name: todo
+        name: database
         required: true
         schema:
-          $ref: '#/definitions/todo.createTodoRequest'
+          $ref: '#/definitions/databases.createDatabaseInput'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/todo.createTodoResponse'
-      summary: Create one todo.
+            $ref: '#/definitions/databases.createDatabaseResponse'
+      summary: Create temporary database
       tags:
-      - todos
+      - databases
 swagger: "2.0"
